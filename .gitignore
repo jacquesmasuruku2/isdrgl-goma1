@@ -1,0 +1,67 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production.local
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Build outputs
+dist/
+build/
+.next/
+.nuxt/
+out/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Testing
+coverage/
+.nyc_output/
+.jest
+
+# Misc
+.cache/
+temp/
+tmp/
+
+# Vercel
+.vercel
+.env.*.local
+
+# Railway
+.railway/
+
+# Supabase
+supabase/.branches/
+supabase/migrations/
+.supabase/
+
+# macOS
+*.DS_Store

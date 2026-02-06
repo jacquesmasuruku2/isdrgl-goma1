@@ -1,0 +1,7 @@
+backend
+.git
+node_modules
+npm-debug.log
+.DS_Store
+.env.local
+.env.production.local

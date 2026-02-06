@@ -1,0 +1,144 @@
+.footer {
+  background: linear-gradient(135deg, var(--dark-color), var(--primary-green));
+  color: var(--white);
+  margin-top: auto;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-lg);
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-2xl);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.footer-section {
+  h3, h4 {
+    color: var(--sky-blue);
+    margin-bottom: var(--spacing-md);
+  }
+
+  p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: var(--font-size-sm);
+  }
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+
+  li {
+    transition: var(--transition);
+
+    &:hover {
+      transform: translateX(5px);
+    }
+  }
+
+  a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: var(--transition);
+
+    &:hover {
+      color: var(--sky-blue);
+    }
+  }
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.contact-item {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+
+  .contact-icon {
+    color: var(--sky-blue);
+    min-width: 24px;
+    margin-top: 2px;
+  }
+
+  p, a {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: var(--font-size-sm);
+    margin: 0;
+  }
+
+  a {
+    &:hover {
+      color: var(--sky-blue);
+    }
+  }
+}
+
+.social-links {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.social-link {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  transition: var(--transition);
+  font-size: var(--font-size-lg);
+
+  &:hover {
+    background: var(--sky-blue);
+    transform: translateY(-3px);
+  }
+
+  &.facebook:hover {
+    background: #1877f2;
+  }
+
+  &.youtube:hover {
+    background: #ff0000;
+  }
+
+  &.linkedin:hover {
+    background: #0a66c2;
+  }
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: var(--spacing-lg);
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--font-size-sm);
+
+  p {
+    margin: var(--spacing-xs) 0;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    padding: var(--spacing-xl) var(--spacing-md) var(--spacing-md);
+  }
+
+  .footer-content {
+    gap: var(--spacing-lg);
+  }
+}

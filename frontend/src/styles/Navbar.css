@@ -1,0 +1,139 @@
+.navbar {
+  background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+  color: var(--white);
+  padding: var(--spacing-md) 0;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--white);
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+
+  .logo-text {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+  }
+
+  .logo-subtext {
+    font-size: var(--font-size-sm);
+    color: var(--sky-blue);
+    font-style: italic;
+  }
+
+  &:hover {
+    color: var(--sky-blue);
+  }
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+
+.nav-link {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--sky-blue);
+    transition: var(--transition);
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
+
+  &.nav-link-primary {
+    background: var(--sky-blue);
+    color: var(--dark-color);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: 0.5rem;
+    font-weight: 600;
+
+    &::after {
+      display: none;
+    }
+
+    &:hover {
+      background: var(--dark-blue);
+      color: var(--white);
+    }
+  }
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  color: var(--white);
+
+  span {
+    width: 25px;
+    height: 3px;
+    background: var(--white);
+    margin: 3px 0;
+    transition: var(--transition);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-menu {
+    position: absolute;
+    top: 70px;
+    left: -100%;
+    flex-direction: column;
+    background-color: var(--primary-green);
+    width: 100%;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-lg) 0;
+    gap: var(--spacing-md);
+
+    &.active {
+      left: 0;
+    }
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .hamburger.active {
+    position: fixed;
+  }
+
+  .navbar-container {
+    padding: 0 var(--spacing-md);
+  }
+}
