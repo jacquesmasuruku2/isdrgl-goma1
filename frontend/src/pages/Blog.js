@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaArrowRight } from 'react-icons/fa';
 import '../styles/Blog.css';
-import strapiService from '../services/strapiService';
+import apiService from '../services/apiService';
 
 function Blog() {
   const [blogs, setBlogs] = useState([]);
@@ -24,7 +24,7 @@ function Blog() {
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const response = await strapiService.getBlogs(100, 0);
+      const response = await apiService.getBlogs(100, 0);
       const blogsList = response?.data || [];
       setBlogs(blogsList);
       

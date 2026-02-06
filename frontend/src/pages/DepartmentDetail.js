@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import '../styles/DepartmentDetail.css';
-import strapiService from '../services/strapiService';
+import apiService from '../services/apiService';
 
 function DepartmentDetail() {
   const { slug } = useParams();
@@ -17,7 +17,7 @@ function DepartmentDetail() {
   const fetchDepartment = async () => {
     try {
       setLoading(true);
-      const response = await strapiService.getDepartmentBySlug(slug);
+      const response = await apiService.getDepartmentBySlug(slug);
       setDepartment(response);
     } catch (error) {
       console.error('Erreur:', error);

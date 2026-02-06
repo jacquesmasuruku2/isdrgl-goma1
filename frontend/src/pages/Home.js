@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaPlay, FaGraduationCap, FaLightbulb, FaUsers } from 'react-icons/fa';
 import '../styles/Home.css';
-import strapiService from '../services/strapiService';
+import apiService from '../services/apiService';
 
 function Home() {
   const [departments, setDepartments] = useState([]);
@@ -14,11 +14,11 @@ function Home() {
       try {
         setLoading(true);
         // Récupérer les départements
-        const deptResponse = await strapiService.getDepartments();
+        const deptResponse = await apiService.getDepartments();
         setDepartments(deptResponse?.data?.slice(0, 3) || []);
 
         // Récupérer les blogs récents
-        const blogsResponse = await strapiService.getBlogs(3, 0);
+        const blogsResponse = await apiService.getBlogs(3, 0);
         setBlogs(blogsResponse?.data || []);
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);

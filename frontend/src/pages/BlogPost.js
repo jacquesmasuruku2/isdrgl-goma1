@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight, FaSend } from 'react-icons/fa';
 import '../styles/BlogPost.css';
-import strapiService from '../services/strapiService';
+import apiService from '../services/apiService';
 import supabaseService from '../services/supabaseService';
 
 function BlogPost() {
@@ -21,7 +21,7 @@ function BlogPost() {
   const fetchBlogAndComments = async () => {
     try {
       setLoading(true);
-      const blogData = await strapiService.getBlogBySlug(slug);
+      const blogData = await apiService.getBlogBySlug(slug);
       setBlog(blogData);
 
       if (blogData?.id) {

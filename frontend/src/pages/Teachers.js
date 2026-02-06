@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaLinkedin, FaPhone, FaEnvelope } from 'react-icons/fa';
 import '../styles/Teachers.css';
-import strapiService from '../services/strapiService';
+import apiService from '../services/apiService';
 
 function Teachers() {
   const [teachers, setTeachers] = useState([]);
@@ -15,7 +15,7 @@ function Teachers() {
   const fetchTeachers = async () => {
     try {
       setLoading(true);
-      const response = await strapiService.getTeachers();
+      const response = await apiService.getTeachers();
       setTeachers(response?.data || []);
     } catch (error) {
       console.error('Erreur:', error);

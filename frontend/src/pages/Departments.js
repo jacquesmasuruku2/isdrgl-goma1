@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaBook } from 'react-icons/fa';
 import '../styles/Departments.css';
-import strapiService from '../services/strapiService';
+import apiService from '../services/apiService';
 
 function Departments() {
   const [departments, setDepartments] = useState([]);
@@ -16,7 +16,7 @@ function Departments() {
   const fetchDepartments = async () => {
     try {
       setLoading(true);
-      const response = await strapiService.getDepartments();
+      const response = await apiService.getDepartments();
       setDepartments(response?.data || []);
     } catch (error) {
       console.error('Erreur lors du chargement des départements:', error);
