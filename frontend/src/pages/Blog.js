@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaArrowRight } from 'react-icons/fa';
 import '../styles/Blog.css';
-import apiService from '../services/apiService';
+import supabaseService from '../services/supabaseService';
 
 function Blog() {
   const [blogs, setBlogs] = useState([]);
@@ -24,13 +24,13 @@ function Blog() {
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getBlogs(100, 0);
-      const blogsList = response?.data || [];
+      const response = await supabaseService.getBlogs();
+      const blogsList = response || [];
       setBlogs(blogsList);
       
       // Extraire les catégories uniques
       const cats = [...new Set(
-        blogsList.map(b => b.attributes?.category?.data?.attributes?.name).filter(Boolean)
+        blogsList.map(b => b.category).filter(Boolean)
       )];
       setCategories(cats);
     } catch (error) {
@@ -45,19 +45,19 @@ function Blog() {
 
     if (searchTerm) {
       filtered = filtered.filter(blog =>
-        blog.attributes?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        blog.attributes?.excerpt?.toLowerCase().includes(searchTerm.toLowerCase())
+        blog.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        blog.excerpt?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(blog =>
-        blog.attributes?.category?.data?.attributes?.name === selectedCategory
+        blog.category === selectedCategory
       );
     }
 
     filtered.sort((a, b) => 
-      new Date(b.attributes?.publishedAt) - new Date(a.attributes?.publishedAt)
+      new Date(b.created_at) - new Date(a.created_at)
     );
 
     setFilteredBlogs(filtered);
@@ -122,32 +122,27 @@ function Blog() {
             <div className="blog-articles-grid">
               {filteredBlogs.map(blog => (
                 <article key={blog.id} className="blog-article-card">
-                  {blog.attributes?.coverImage?.data?.attributes?.url && (
+                  {blog.image && (
                     <div className="article-image">
                       <img 
-                        src={blog.attributes.coverImage.data.attributes.url}
-                        alt={blog.attributes.title}
+                        src={blog.image}
+                        alt={blog.title}
                       />
                       <span className="article-category">
-                        {blog.attributes?.category?.data?.attributes?.name}
+                        {blog.category}
                       </span>
                     </div>
                   )}
                   <div className="article-content">
                     <div className="article-meta">
                       <span className="article-date">
-                        {formatDate(blog.attributes?.publishedAt)}
+                        {formatDate(blog.created_at)}
                       </span>
-                      {blog.attributes?.author?.data && (
-                        <span className="article-author">
-                          Par {blog.attributes.author.data.attributes.name}
-                        </span>
-                      )}
                     </div>
-                    <h3>{blog.attributes?.title}</h3>
-                    <p>{blog.attributes?.excerpt}</p>
+                    <h3>{blog.title}</h3>
+                    <p>{blog.excerpt}</p>
                     <Link 
-                      to={`/blog/${blog.attributes?.slug}`}
+                      to={`/blog/${blog.slug}`}
                       className="read-more"
                     >
                       Lire la suite <FaArrowRight />

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaLinkedin, FaPhone, FaEnvelope } from 'react-icons/fa';
 import '../styles/Teachers.css';
-import apiService from '../services/apiService';
+import supabaseService from '../services/supabaseService';
 
 function Teachers() {
   const [teachers, setTeachers] = useState([]);
@@ -15,8 +15,8 @@ function Teachers() {
   const fetchTeachers = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getTeachers();
-      setTeachers(response?.data || []);
+      const response = await supabaseService.getTeachers();
+      setTeachers(response || []);
     } catch (error) {
       console.error('Erreur:', error);
     } finally {
@@ -148,28 +148,28 @@ function Teachers() {
                   </div>
                   
                   <div className="teacher-info">
-                    <h3 className="teacher-name">{teacher.name}</h3>
-                    <p className="teacher-title">{teacher.attributes?.title || teacher.title}</p>
+                    <h3 className="teacher-name">{teacher.name || `${teacher.first_name || ''} ${teacher.last_name || ''}`.trim()}</h3>
+                    <p className="teacher-title">{teacher.title || teacher.specialization}</p>
                     <p className="teacher-qualification">
-                      {teacher.attributes?.qualification || teacher.qualification}
+                      {teacher.qualification || teacher.experience}
                     </p>
                     <p className="teacher-bio">
-                      {teacher.attributes?.bio || teacher.bio}
+                      {teacher.bio || teacher.bio}
                     </p>
 
                     <div className="teacher-contact">
-                      {(teacher.email || teacher.attributes?.email) && (
-                        <a href={`mailto:${teacher.attributes?.email || teacher.email}`} className="contact-link" title="Email">
+                      {teacher.email && (
+                        <a href={`mailto:${teacher.email}`} className="contact-link" title="Email">
                           <FaEnvelope />
                         </a>
                       )}
-                      {(teacher.phone || teacher.attributes?.phone) && (
-                        <a href={`tel:${teacher.attributes?.phone || teacher.phone}`} className="contact-link" title="Téléphone">
+                      {teacher.phone && (
+                        <a href={`tel:${teacher.phone}`} className="contact-link" title="Téléphone">
                           <FaPhone />
                         </a>
                       )}
-                      {(teacher.linkedin || teacher.attributes?.linkedin) && (
-                        <a href={teacher.attributes?.linkedin || teacher.linkedin} target="_blank" rel="noopener noreferrer" className="contact-link linkedin" title="LinkedIn">
+                      {(teacher.linkedin || teacher.linkedin) && (
+                        <a href={teacher.linkedin} target="_blank" rel="noopener noreferrer" className="contact-link linkedin" title="LinkedIn">
                           <FaLinkedin />
                         </a>
                       )}

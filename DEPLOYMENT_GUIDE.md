@@ -1,12 +1,12 @@
-# 🚀 GUIDE DÉPLOIEMENT - FRONTEND + BACKEND
+# 🚀 GUIDE DÉPLOIEMENT - FRONTEND (SUPABASE DIRECT)
 
 ## ✅ Changements Effectués
 
-### Frontend - Migration Strapi → Backend Node.js
+### Frontend - Migration Strapi → Supabase Direct
 
-**Créé:** `frontend/src/services/apiService.js`
-- Remplace les appels Strapi par des appels au backend Node.js
-- Utilise l'URL de base: `process.env.REACT_APP_API_URL`
+**Utilise:** `frontend/src/services/supabaseService.js`
+- Appels Supabase directs (pas de backend)
+- Variables d'env Supabase uniquement
 
 **Adapté tous les fichiers:**
 - ✅ `Frontend/src/pages/Home.js` - getDepartments(), getBlogs()
@@ -24,25 +24,14 @@
 ┌─────────────────────────────────────────────────────┐
 │                   VERCEL - Frontend React           │
 │  URL: https://votre-frontend.vercel.app             │
-│  ├── Home (appelle /api/departments)                │
-│  ├── Blog (appelle /api/blog)                       │
-│  ├── Teachers (appelle /api/teachers)               │
-│  └── Admission (utilise Supabase directement)       │
-└────────────────┬────────────────────────────────────┘
-                 │ REACT_APP_API_URL
-                 │ https://votre-backend.com
+│  ├── Home (lit Supabase)                            │
+│  ├── Blog (lit Supabase)                            │
+│  ├── Teachers (lit Supabase)                        │
+│  ├── Admission (écrit Supabase)                     │
+│  └── Contact (écrit Supabase)                       │
+└─────────────────────────────────────────────────────┘
+                 │
                  ▼
-        ┌─────────────────────────────────┐
-        │   Backend Node.js/Express       │
-        │   URL: https://votre-backend    │
-        │   ├── GET /api/departments      │
-        │   ├── GET /api/blog             │
-        │   ├── GET /api/teachers         │
-        │   ├── POST /api/admissions      │
-        │   └── POST /api/contact         │
-        └────────────┬────────────────────┘
-                     │
-                     ▼
         ┌─────────────────────────────────┐
         │      SUPABASE Database          │
         │  - departments table            │
@@ -56,34 +45,7 @@
 
 ---
 
-## 🛠️ ÉTAPE 1 : DÉPLOYER LE BACKEND
-
-### Option A: Railway.app (Recommandé)
-
-1. Allez sur https://railway.app
-2. Connectez votre GitHub
-3. Créez un nouveau projet
-4. Sélectionnez le repo `isdrgl-goma1`
-5. Configurez le **root path** vers `/backend`
-6. Ajoutez les variables d'environnement:
-
-```bash
-NODE_ENV=production
-PORT=5000
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-anon-key
-```
-
-7. Déployez !
-8. Copie l'URL de votre backend (ex: `https://isdrgl-backend-prod.up.railway.app`)
-
-### Option B: Heroku/Render/Fly.io
-
-Configuration similaire, juste changer le fournisseur.
-
----
-
-## 🎨 ÉTAPE 2 : DÉPLOYER LE FRONTEND
+## 🎨 ÉTAPE UNIQUE : DÉPLOYER LE FRONTEND
 
 ### Sur Vercel
 
@@ -99,9 +61,9 @@ Configuration similaire, juste changer le fournisseur.
 5. Cliquez **Environment Variables** et ajoutez:
 
 ```bash
-REACT_APP_API_URL=https://your-backend-url.com
 REACT_APP_SUPABASE_URL=https://your-project.supabase.co
 REACT_APP_SUPABASE_ANON_KEY=your-anon-key
+REACT_APP_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 ```
 
 **IMPORTANT:** Remplacez les URLs par vos vraies URLs!
@@ -124,22 +86,9 @@ REACT_APP_SUPABASE_ANON_KEY=your-anon-key
    - ✅ Admission - Formulaire fonctionnel
    - ✅ Contact - Formulaire fonctionnel
 
-### Tester le Backend
+## 🔧 STRUCTURE DES DONNÉES SUPABASE
 
-```bash
-curl https://your-backend-url.com/api/departments
-curl https://your-backend-url.com/api/blog
-curl https://your-backend-url.com/api/teachers
-curl https://your-backend-url.com/api/health
-```
-
-Chaque endpoint doit retourner des données JSON ou un tableau vide `[]`.
-
----
-
-## 🔧 STRUCTURE DES ENDPOINTS
-
-### GET /api/departments
+### Table: departments
 ```json
 [
   {
@@ -153,7 +102,7 @@ Chaque endpoint doit retourner des données JSON ou un tableau vide `[]`.
 ]
 ```
 
-### GET /api/blog
+### Table: blog_posts
 ```json
 [
   {
@@ -168,7 +117,7 @@ Chaque endpoint doit retourner des données JSON ou un tableau vide `[]`.
 ]
 ```
 
-### GET /api/teachers
+### Table: teachers
 ```json
 [
   {
@@ -188,18 +137,6 @@ Chaque endpoint doit retourner des données JSON ou un tableau vide `[]`.
 
 ## ⚠️ TROUBLESHOOTING
 
-### "REACT_APP_API_URL is undefined"
-- ❌ Les variables d'environnement ne sont pas configurées sur Vercel
-- ✅ Allez sur Vercel → Project Settings → Environment Variables
-
-### "Cannot GET /api/departments"
-- ❌ Le backend n'est pas déployé ou l'URL est mauvaise
-- ✅ Testez avec `curl` pour vérifier que le backend répond
-
-### "CORS error in console"
-- ❌ Le backend n'autorise pas les appels cross-origin
-- ✅ Vérifiez que `cors` est bien configuré dans `app.js`
-
 ### "Supabase connection error"
 - ❌ Les variables Supabase ne sont pas correctes
 - ✅ Vérifiez dans backend/.env que `SUPABASE_URL` et `SUPABASE_ANON_KEY` sont corrects
@@ -208,10 +145,7 @@ Chaque endpoint doit retourner des données JSON ou un tableau vide `[]`.
 
 ## 📝 CHECKLIST FINAL
 
-- [ ] Backend déployé sur Railway/Heroku/Fly.io
-- [ ] Backend répond à `/api/health` (test avec curl)
 - [ ] Frontend variables d'env configurées sur Vercel
-- [ ] `REACT_APP_API_URL` pointe vers le backend
 - [ ] Frontend build réussi
 - [ ] Home page affiche les départements
 - [ ] Blog affiche les articles
@@ -224,7 +158,7 @@ Chaque endpoint doit retourner des données JSON ou un tableau vide `[]`.
 
 ```
 Frontend:  https://isdr-gl.vercel.app
-Backend:   https://isdr-gl-backend.up.railway.app
+Backend:   (supprimé - Supabase direct)
 Supabase:  https://your-project.supabase.co (privé)
 ```
 

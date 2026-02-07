@@ -8,12 +8,12 @@
 ## ✅ VÉRIFICATIONS EFFECTUÉES
 
 ### 1. **FRONTEND - Imports**
-- ✅ `Home.js` - Utilise `apiService` ✓
-- ✅ `Blog.js` - Utilise `apiService` ✓
-- ✅ `BlogPost.js` - Utilise `apiService` ✓
-- ✅ `Departments.js` - Utilise `apiService` ✓
-- ✅ `DepartmentDetail.js` - Utilise `apiService` ✓
-- ✅ `Teachers.js` - Utilise `apiService` ✓
+- ✅ `Home.js` - Utilise `supabaseService` ✓
+- ✅ `Blog.js` - Utilise `supabaseService` ✓
+- ✅ `BlogPost.js` - Utilise `supabaseService` ✓
+- ✅ `Departments.js` - Utilise `supabaseService` ✓
+- ✅ `DepartmentDetail.js` - Utilise `supabaseService` ✓
+- ✅ `Teachers.js` - Utilise `supabaseService` ✓
 - ✅ `Admission.js` - Utilise `supabaseService` ✓
 - ✅ `Contact.js` - Utilise `supabaseService` ✓
 
@@ -37,7 +37,7 @@
 ✅ framework: "create-react-app"
 ✅ buildCommand: "npm run build"
 ✅ installCommand: "npm install"
-✅ env: ["REACT_APP_SUPABASE_URL", "REACT_APP_SUPABASE_ANON_KEY", "REACT_APP_API_URL"]
+✅ env: ["REACT_APP_SUPABASE_URL", "REACT_APP_SUPABASE_ANON_KEY", "REACT_APP_SUPABASE_PUBLISHABLE_KEY"]
 ✅ rewrites: [{ "source": "/(.*)", "destination": "/index.html" }]
 ```
 
@@ -45,9 +45,9 @@
 
 ### 4. **FRONTEND - .env.example**
 ```bash
-✅ REACT_APP_API_URL=https://your-backend-url.com
 ✅ REACT_APP_SUPABASE_URL=https://your-project.supabase.co
 ✅ REACT_APP_SUPABASE_ANON_KEY=your-anon-key
+✅ REACT_APP_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 ```
 
 **Status:** Documentation claire
@@ -137,22 +137,16 @@
 - [x] Package.json - ✅ Correct
 - [x] Vercel.json - ✅ Correct
 - [x] .env.example - ✅ Documenté
-- [x] Tous les imports - ✅ apiService
+- [x] Tous les imports - ✅ supabaseService
 - [x] Pas d'erreurs - ✅ Code propre
 - [x] Aucun appel Strapi - ✅ Supprimé
 - [x] Dépendances - ✅ Complètes
 
 ### Backend
-- [x] Package.json - ✅ Correct
-- [x] Routes API - ✅ Définies
-- [x] Supabase config - ✅ OK
-- [x] CORS middleware - ✅ Configuré
-- [x] Error handling - ✅ OK
-- [x] Health check - ✅ Présent
+- [x] Non requis (Supabase direct)
 
 ### Architecture
-- [x] Frontend → apiService → Backend - ✅ OK
-- [x] Backend → Supabase - ✅ OK
+- [x] Frontend → Supabase direct - ✅ OK
 - [x] Pas de Strapi - ✅ Supprimé
 
 ### Git
@@ -184,37 +178,24 @@
 ```
 Status: 🟢 PRÊT
 Qu'est-ce qui manque: Configuration sur Vercel seulement
-Action: Ajouter REACT_APP_API_URL sur Vercel
+Action: Ajouter REACT_APP_SUPABASE_URL / REACT_APP_SUPABASE_ANON_KEY / REACT_APP_SUPABASE_PUBLISHABLE_KEY sur Vercel
 Durée: 5 minutes
 ```
 
-### Backend (Railway)
+### Backend
 ```
-Status: 🟢 PRÊT
-Qu'est-ce qui manque: Déploiement seulement
-Action: Push vers Railway et configurer env vars
-Durée: 15 minutes
+Status: ✅ Supprimé (non requis)
 ```
 
 ---
 
 ## 📋 PROCHAINES ÉTAPES (30 MIN TOTAL)
 
-### 1. Deploy Backend (15 min)
-```
-[1] Railway.app → New Project
-[2] Select isdrgl-goma1 repository
-[3] Set Root Directory: /backend
-[4] Add env vars: SUPABASE_URL, SUPABASE_ANON_KEY
-[5] Deploy
-[6] Copy URL ← IMPORTANT!
-```
-
-### 2. Configure Frontend (5 min)
+### 1. Configure Frontend (5 min)
 ```
 [1] Vercel.com → Project Settings
 [2] Environment Variables
-[3] Add: REACT_APP_API_URL=[Backend URL from Step 1]
+[3] Add: REACT_APP_SUPABASE_URL, REACT_APP_SUPABASE_ANON_KEY, REACT_APP_SUPABASE_PUBLISHABLE_KEY
 [4] Redeploy or wait for auto-redeploy
 ```
 
@@ -240,7 +221,7 @@ Total Préparation:    ✅ COMPLÉTÉE (2h+)
    - Documentation:   ✅ 30 min
 
 Déploiement:         ⏳ 30 MINUTES (à faire maintenant)
-   - Backend:        ⏳ 15 min
+   - Backend:        ✅ 0 min (non requis)
    - Frontend:       ⏳ 5 min
    - Testing:        ⏳ 10 min
 ```
@@ -251,21 +232,21 @@ Déploiement:         ⏳ 30 MINUTES (à faire maintenant)
 
 ### API Service Architecture
 ```javascript
-apiService.js
-├── getDepartments()        → GET /api/departments
-├── getDepartmentBySlug()   → GET /api/departments (filter)
-├── getBlogs()              → GET /api/blog
-├── getBlogBySlug()         → GET /api/blog (filter)
-├── getTeachers()           → GET /api/teachers
-├── createAdmission()       → POST /api/admissions
-└── createContact()         → POST /api/contact
+supabaseService.js
+├── getDepartments()        → Supabase table
+├── getDepartmentBySlug()   → Supabase table
+├── getBlogs()              → Supabase table
+├── getBlogBySlug()         → Supabase table
+├── getTeachers()           → Supabase table
+├── createAdmission()       → Supabase table
+└── createContact()         → Supabase table
 ```
 
 ### Environment Variables Required
 ```bash
-REACT_APP_API_URL          (ex: https://backend.railway.app)
 REACT_APP_SUPABASE_URL     (ex: https://xxx.supabase.co)
 REACT_APP_SUPABASE_ANON_KEY (ex: eyJ0eXAi...)
+REACT_APP_SUPABASE_PUBLISHABLE_KEY (ex: sb_publishable...)
 ```
 
 ### Database (Supabase)
@@ -289,17 +270,16 @@ REACT_APP_SUPABASE_ANON_KEY (ex: eyJ0eXAi...)
 ### ✅ **OUI, 100% PRÊT**
 
 - ✅ Frontend: Code adapté, dépendances complètes, configuration correcte
-- ✅ Backend: Routes définies, Supabase configuré, prêt à déployer
-- ✅ Architecture: Strapi supprimé, apiService intégré, flux de données correct
+- ✅ Backend: Non requis (Supabase direct)
+- ✅ Architecture: Strapi supprimé, Supabase direct, flux de données correct
 - ✅ Documentation: Exhaustive et claire
 - ✅ Code Quality: Aucune erreur ou warning
 - ✅ Git: Tous les changements commités et synchronisés
 
 **CE QUI RESTE À FAIRE:**
-1. Déployer le backend (Railway)
-2. Configurer REACT_APP_API_URL sur Vercel
-3. Laisser Vercel redéployer
-4. Tester le site
+1. Configurer les variables Supabase sur Vercel
+2. Laisser Vercel redéployer
+3. Tester le site
 
 **DURÉE RESTANTE:** 30 minutes
 

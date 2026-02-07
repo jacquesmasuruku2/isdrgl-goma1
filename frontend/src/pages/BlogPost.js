@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight, FaSend } from 'react-icons/fa';
 import '../styles/BlogPost.css';
-import apiService from '../services/apiService';
 import supabaseService from '../services/supabaseService';
 
 function BlogPost() {
@@ -21,7 +20,7 @@ function BlogPost() {
   const fetchBlogAndComments = async () => {
     try {
       setLoading(true);
-      const blogData = await apiService.getBlogBySlug(slug);
+      const blogData = await supabaseService.getBlogBySlug(slug);
       setBlog(blogData);
 
       if (blogData?.id) {
@@ -94,19 +93,19 @@ function BlogPost() {
           <Link to="/blog" className="back-link">
             <FaArrowLeft /> Retour au Blog
           </Link>
-          <h1>{blog.attributes?.title}</h1>
+          <h1>{blog.title}</h1>
           <div className="post-meta">
             <span className="post-date">
-              {formatDate(blog.attributes?.publishedAt)}
+              {formatDate(blog.created_at)}
             </span>
-            {blog.attributes?.author?.data && (
+            {blog.author && (
               <span className="post-author">
-                Par {blog.attributes.author.data.attributes.name}
+                Par {blog.author}
               </span>
             )}
-            {blog.attributes?.category?.data && (
+            {blog.category && (
               <span className="post-category">
-                {blog.attributes.category.data.attributes.name}
+                {blog.category}
               </span>
             )}
           </div>
@@ -114,11 +113,11 @@ function BlogPost() {
       </section>
 
       {/* Image de couverture */}
-      {blog.attributes?.coverImage?.data?.attributes?.url && (
+      {blog.image && (
         <div className="post-hero-image">
           <img
-            src={blog.attributes.coverImage.data.attributes.url}
-            alt={blog.attributes.title}
+            src={blog.image}
+            alt={blog.title}
           />
         </div>
       )}
@@ -130,7 +129,7 @@ function BlogPost() {
             <article className="post-article">
               <div 
                 dangerouslySetInnerHTML={{
-                  __html: blog.attributes?.content || blog.attributes?.body || ''
+                  __html: blog.content || blog.body || ''
                 }}
               />
             </article>
@@ -139,12 +138,11 @@ function BlogPost() {
             <aside className="post-sidebar">
               <div className="sidebar-card">
                 <h3>À Propos de l'Auteur</h3>
-                {blog.attributes?.author?.data?.attributes && (
+                {blog.author && (
                   <>
                     <p className="author-name">
-                      {blog.attributes.author.data.attributes.name}
+                      {blog.author}
                     </p>
-                    <p>{blog.attributes.author.data.attributes.bio}</p>
                   </>
                 )}
               </div>

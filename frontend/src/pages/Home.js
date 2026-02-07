@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaPlay, FaGraduationCap, FaLightbulb, FaUsers } from 'react-icons/fa';
 import '../styles/Home.css';
-import apiService from '../services/apiService';
+import supabaseService from '../services/supabaseService';
 
 function Home() {
   const [departments, setDepartments] = useState([]);
@@ -14,12 +14,12 @@ function Home() {
       try {
         setLoading(true);
         // Récupérer les départements
-        const deptResponse = await apiService.getDepartments();
-        setDepartments(deptResponse?.data?.slice(0, 3) || []);
+        const deptResponse = await supabaseService.getDepartments();
+        setDepartments(deptResponse?.slice(0, 3) || []);
 
         // Récupérer les blogs récents
-        const blogsResponse = await apiService.getBlogs(3, 0);
-        setBlogs(blogsResponse?.data || []);
+        const blogsResponse = await supabaseService.getBlogs();
+        setBlogs(blogsResponse?.slice(0, 3) || []);
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
       } finally {
@@ -119,10 +119,10 @@ function Home() {
                   <div className="card-header">
                     <FaGraduationCap className="card-icon" />
                   </div>
-                  <h3>{dept.attributes?.name || 'Département'}</h3>
-                  <p>{dept.attributes?.description?.substring(0, 100)}...</p>
+                  <h3>{dept.name || 'Département'}</h3>
+                  <p>{dept.description?.substring(0, 100)}...</p>
                   <Link 
-                    to={`/departments/${dept.attributes?.slug}`} 
+                    to={`/departments/${dept.slug}`} 
                     className="card-link"
                   >
                     Découvrir <FaArrowRight />
@@ -174,21 +174,21 @@ function Home() {
             <div className="blog-grid">
               {blogs.map((blog) => (
                 <article key={blog.id} className="blog-card">
-                  {blog.attributes?.coverImage?.data?.attributes?.url && (
+                  {blog.image && (
                     <img 
-                      src={blog.attributes.coverImage.data.attributes.url} 
-                      alt={blog.attributes.title}
+                      src={blog.image} 
+                      alt={blog.title}
                       className="blog-image"
                     />
                   )}
                   <div className="blog-content">
                     <span className="blog-category">
-                      {blog.attributes?.category?.data?.attributes?.name || 'General'}
+                      {blog.category || 'General'}
                     </span>
-                    <h3>{blog.attributes?.title}</h3>
-                    <p>{blog.attributes?.excerpt?.substring(0, 100)}...</p>
+                    <h3>{blog.title}</h3>
+                    <p>{blog.excerpt?.substring(0, 100)}...</p>
                     <Link 
-                      to={`/blog/${blog.attributes?.slug}`}
+                      to={`/blog/${blog.slug}`}
                       className="read-more"
                     >
                       Lire la suite <FaArrowRight />

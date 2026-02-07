@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import '../styles/DepartmentDetail.css';
-import apiService from '../services/apiService';
+import supabaseService from '../services/supabaseService';
 
 function DepartmentDetail() {
   const { slug } = useParams();
@@ -17,7 +17,7 @@ function DepartmentDetail() {
   const fetchDepartment = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getDepartmentBySlug(slug);
+      const response = await supabaseService.getDepartmentBySlug(slug);
       setDepartment(response);
     } catch (error) {
       console.error('Erreur:', error);
@@ -209,8 +209,8 @@ function DepartmentDetail() {
           <Link to="/departments" className="back-link">
             <FaArrowLeft /> Retour aux Filières
           </Link>
-          <h1>{deptData.attributes?.name || deptData.name}</h1>
-          <p>{deptData.attributes?.description || deptData.description}</p>
+          <h1>{deptData.name}</h1>
+          <p>{deptData.description}</p>
         </div>
       </section>
 
@@ -221,7 +221,7 @@ function DepartmentDetail() {
             <div className="detail-text">
               <div 
                 dangerouslySetInnerHTML={{
-                  __html: deptData.attributes?.content || deptData.content || ''
+                  __html: deptData.content || ''
                 }}
               />
             </div>

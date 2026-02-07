@@ -42,7 +42,7 @@
   "env": [
     "REACT_APP_SUPABASE_URL",
     "REACT_APP_SUPABASE_ANON_KEY",
-    "REACT_APP_API_URL"
+    "REACT_APP_SUPABASE_PUBLISHABLE_KEY"
   ],
   "rewrites": [...]
 }
@@ -56,7 +56,7 @@
 ```
 REACT_APP_SUPABASE_URL=https://your-project.supabase.co
 REACT_APP_SUPABASE_ANON_KEY=your-anon-key
-REACT_APP_API_URL=http://localhost:5000
+REACT_APP_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 REACT_APP_STRAPI_URL=http://localhost:1337
 ```
 
@@ -109,7 +109,7 @@ JWT_SECRET=your_jwt_secret
 4. Ajoutez ces variables:
    - `REACT_APP_SUPABASE_URL` = votre URL Supabase
    - `REACT_APP_SUPABASE_ANON_KEY` = votre clé anon Supabase
-   - `REACT_APP_API_URL` = URL backend (ex: https://api.votresite.com)
+   - `REACT_APP_SUPABASE_PUBLISHABLE_KEY` = votre clé publishable Supabase
 
 5. Allez à **Deployments**
 6. Cliquez **"Redeploy"** pour relancer le build

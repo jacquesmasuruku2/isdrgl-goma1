@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaBook } from 'react-icons/fa';
 import '../styles/Departments.css';
-import apiService from '../services/apiService';
+import supabaseService from '../services/supabaseService';
 
 function Departments() {
   const [departments, setDepartments] = useState([]);
@@ -16,8 +16,8 @@ function Departments() {
   const fetchDepartments = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getDepartments();
-      setDepartments(response?.data || []);
+      const response = await supabaseService.getDepartments();
+      setDepartments(response || []);
     } catch (error) {
       console.error('Erreur lors du chargement des départements:', error);
     } finally {
@@ -94,26 +94,16 @@ function Departments() {
                     <div className="dept-icon">
                       <FaBook />
                     </div>
-                    <h3>{dept.attributes?.name || dept.name}</h3>
+                    <h3>{dept.name || dept.name}</h3>
                   </div>
                   <p className="dept-description">
-                    {dept.attributes?.description || dept.description}
+                    {dept.description || dept.description}
                   </p>
                   <div className="dept-details">
-                    <p>{dept.attributes?.details || dept.details}</p>
+                    <p>{dept.details || dept.details}</p>
                   </div>
-                  {dept.attributes?.programs?.data && (
-                    <div className="dept-programs">
-                      <h4>Programmes Disponibles:</h4>
-                      <ul>
-                        {dept.attributes.programs.data.map((prog) => (
-                          <li key={prog.id}>{prog.attributes.name}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
                   <Link 
-                    to={`/departments/${dept.attributes?.slug || dept.slug}`}
+                    to={`/departments/${dept.slug || dept.slug}`}
                     className="btn btn-secondary"
                   >
                     Détails Complets <FaArrowRight />

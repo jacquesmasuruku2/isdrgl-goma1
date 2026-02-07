@@ -11,55 +11,47 @@
 |-----------|--------|---------|---------|
 | Frontend - Dépendances | ✅ OK | - | Toutes présentes + @supabase/supabase-js ajoutée |
 | Frontend - Imports | ✅ OK | - | Tous les imports sont corrects |
-| Frontend - Strapi | ❌ CRITIQUE | 🔴 HAUTE | Service Strapi appelle une API inexistante |
+| Frontend - Strapi | ✅ RÉSOLU | 🟢 OK | Supabase direct remplace Strapi |
 | Backend - Dépendances | ⚠️ PROBLÈME | 🟠 MOYENNE | mongoose déclaré mais inutilisé |
 | Backend - Architecture | ⚠️ PROBLÈME | 🟠 MOYENNE | database.js (MongoDB) jamais utilisé |
-| Configuration | ⚠️ PROBLÈME | 🟠 MOYENNE | Strapi URL pointe vers localhost:1337 |
+| Configuration | ✅ RÉSOLU | 🟢 OK | Variables Supabase direct configurées |
 
 ---
 
-## 🔴 PROBLÈME CRITIQUE #1: Architecture Front-Back
+## ✅ SOLUTION APPLIQUÉE: Supabase Direct (Serverless)
 
 ### 🚨 Le Problème
 
-Le **frontend utilise `strapiService`** pour récupérer les données:
-- Blogs: `strapiService.getBlogs()`
-- Départements: `strapiService.getDepartments()`  
-- Enseignants: `strapiService.getTeachers()`
+Le **frontend utilise `supabaseService`** pour récupérer les données:
+- Blogs: `supabaseService.getBlogs()`
+- Départements: `supabaseService.getDepartments()`  
+- Enseignants: `supabaseService.getTeachers()`
 
-**URL cible:** `http://localhost:1337` (Strapi CMS)
+**Source:** Supabase (direct)
 
 **Réalité:** 
-- ❌ Il n'y a PAS d'API Strapi déployée
-- ❌ Le backend Node.js a ses propres API à `/api/departments`, `/api/teachers`, etc.
-- ❌ Les deux ne matchent PAS
+- ✅ Appels directs à Supabase
+- ✅ Pas besoin de backend
+- ✅ Données tirées des tables Supabase
 
 ### 📍 Fichiers Affectés
 
 ```
-Frontend pages qui utilisent strapiService:
+Frontend pages qui utilisent supabaseService:
 ├── src/pages/Home.js         → getDepartments(), getBlogs()
 ├── src/pages/Blog.js         → getBlogs()
 ├── src/pages/BlogPost.js     → getBlogBySlug()
 ├── src/pages/Departments.js  → getDepartments()
 ├── src/pages/DepartmentDetail.js → getDepartmentBySlug()
 ├── src/pages/Teachers.js     → getTeachers()
-
-Backend API disponible:
-├── /api/departments          [GET/POST/PUT/DELETE]
-├── /api/teachers             [GET/POST/PUT/DELETE]
-├── /api/admissions           [GET/POST]
-├── /api/blog                 [GET/POST]
-├── /api/contact              [GET/POST]
 ```
 
-### ⚠️ Impact
+### ✅ Impact
 
-**Sur Vercel = CRASH TOTAL** car:
-1. Page Home tente d'appeler Strapi → 404
-2. Page Blog tente d'appeler Strapi → 404
-3. Page Departments tente d'appeler Strapi → 404
-4. Aucune donnée ne s'affiche → Application cassée
+**Sur Vercel = OK** car:
+1. Pages appellent Supabase directement
+2. Plus de dépendance backend
+3. Données retournées depuis Supabase
 
 ---
 
@@ -136,38 +128,11 @@ const connectDB = async () => {
 
 ## 🛠️ SOLUTIONS RECOMMANDÉES
 
-### **OPTION A: Utiliser le Backend Node.js (Recommandé! ⭐)**
+### ✅ Option Appliquée: Supabase Direct (Recommandé)
 
-Modifier `frontend/src/services/strapiService.js` pour appeler le backend Node.js au lieu de Strapi:
-
-```javascript
-// AVANT:
-const STRAPI_URL = process.env.REACT_APP_STRAPI_URL || 'http://localhost:1337';
-
-// APRÈS:
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-
-// Et utiliser /api/departments, /api/teachers, etc.
-```
-
-**Avantages:**
-- ✅ Utilise l'infrastructure existante
-- ✅ Supabase retourne peut-être des données vides, mais c'est OK
-- ✅ Frontend et Backend marchent ensemble
-
-**Travail nécessaire:** 1-2 heures pour adapter les appels API
-
----
-
-### **OPTION B: Installer Strapi (Non recommandé 🚫)**
-
-Installer et déployer Strapi comme un service séparé.
-
-**Inconvénients:**
-- ❌ Coûteux
-- ❌ Complexe
-- ❌ Duplication de données (Strapi + Supabase)
-- ❌ Maintenance supplémentaire
+- ✅ Appels directs aux tables Supabase
+- ✅ Pas de backend requis
+- ✅ Déploiement simple sur Vercel
 
 ---
 
@@ -196,18 +161,15 @@ const mockDepartments = [
 - ✅ Package.json: Dépendances complètes
 - ✅ Vercel.json: Configuration correcte
 - ✅ .env.example: Documenté
-- ⚠️ **À FAIRE**: Décider comment récupérer les données (Strapi vs Backend)
-- ⚠️ **À FAIRE**: Configurer `REACT_APP_API_URL` sur Vercel
+- ✅ Données: Supabase direct
+- ✅ Variables Supabase à configurer sur Vercel
 - ✅ Tous les imports valides
 - ✅ Pas d'erreur de syntaxe détectée
 
 ### Backend
 
-- ✅ Package.json: Dépendances correctes
-- ✅ Config Supabase: OK
-- ✅ Routes API: Définies
+- ✅ Non requis (Supabase direct)
 - ⚠️ À FAIRE: Supprimer `database.js` (optionnel, ne crée pas d'erreurs)
-- ✅ Modèles: OK
 
 ### Variables d'Environnement
 
@@ -216,7 +178,7 @@ const mockDepartments = [
 ```
 REACT_APP_SUPABASE_URL=https://your-project.supabase.co
 REACT_APP_SUPABASE_ANON_KEY=your-anon-key
-REACT_APP_API_URL=https://your-backend-url.com  ← IMPORTANT!
+REACT_APP_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 ```
 
 ---
@@ -226,44 +188,29 @@ REACT_APP_API_URL=https://your-backend-url.com  ← IMPORTANT!
 | Aspect | Verdict |
 |--------|---------|
 | **Build réussira?** | ✅ OUI (dépendances OK) |
-| **Le site fonctionnera?** | ❌ NON (pas de données, Strapi cassé) |
-| **Besoin d'action?** | 🟠 OUI (adapter l'API) |
+| **Le site fonctionnera?** | ✅ OUI (Supabase direct) |
+| **Besoin d'action?** | 🟡 OUI (configurer env sur Vercel) |
 
 ---
 
 ## 📝 ACTIONS IMMÉDIATES
 
-### 1️⃣ Décider de la stratégie de données
-- [ ] Option A (Backend Node.js) ← Recommandé
-- [ ] Option B (Strapi)
-- [ ] Option C (Mock data)
-
-### 2️⃣ Si Option A: Adapter strapiService.js
-- [ ] Changer l'URL de base
-- [ ] Adapter les endpoints pour matcher le backend
-
-### 3️⃣ Configurer les variables d'environnement Vercel
-- [ ] Ajouter REACT_APP_API_URL
+### 1️⃣ Configurer les variables d'environnement Vercel
 - [ ] Ajouter credentials Supabase
 
 ### 4️⃣ Nettoyer (optionnel)
 - [ ] Supprimer `backend/src/config/database.js`
 - [ ] Supprimer mongoose des docs
 
-### 5️⃣ Tester localement avant Vercel
+### 2️⃣ Tester localement avant Vercel
 - [ ] `npm start` dans frontend/
-- [ ] `npm run dev` dans backend/
 - [ ] Vérifier que les pages chargent
 
 ---
 
 ## 📞 Prochaines Étapes
 
-**Vous devez choisir:** Quelle stratégie pour les données?
-
-Créez-vous une API Strapi complète, ou adaptez-vous à utiliser le backend Node.js?
-
-**Une fois décidé, je peux adapter le code en 30 minutes.**
+**Vous êtes prêt à déployer en serverless Supabase direct.**
 
 ---
 
